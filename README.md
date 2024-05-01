@@ -41,21 +41,21 @@ This student portal is a web-based project that aims to facilitate the communica
      Note: There will be more explanation regarding the last three points in the following section. Specifically, the Code Documentation section later on.
 
   ### Python libraries needed:
-    - The CS50 third-party library (SQL regulations)
-    - Flask library used (regulated the app requests and main operation, considered that Flask is a the framework used for the website)
-    - Flask-Session used (Online sessions regulations)
-    - sendgrid library (sendgrid API regulations)
-    - Werkzeug library (security measures and password checking)
+    * The CS50 third-party library (SQL regulations)
+    * Flask library used (regulated the app requests and main operation, considered that Flask is a the framework used for the website)
+    * Flask-Session used (Online sessions regulations)
+    * sendgrid library (sendgrid API regulations)
+    * Werkzeug library (security measures and password checking)
 
     Each of the libraries can be installed using the following commands:
 
-    `
+    ```
     pip install cs50
     pip install Flask
     pip install Flask-Session
     pip install sendgrid
     pip install Werkzeug
-    `
+    ```
 
     Make sure you have `pip` installed on your system before running these commands. If you are using a virtual environment (which is recommended for Python projects), activate it before installing the packages. Additionally, you may need to use `pip3` instead of `pip` if you're working with Python 3.x.
 
@@ -76,15 +76,15 @@ You would be required to follow the following steps to ensure that the webapp wo
    * Sign up using a new account if you don't have one.
    * Request an API generation after filling the required details
    * Store the API Key into an environment variable on your device and that would be through using the commands:
-    - For Windows:
-     ```
-     set SENDGRID_API_KEY="#Your Key"
-     ```
-    - For Linux:
-    ```
-    export SENDGRID_API_KEY="#Your Key"
-    ```
-    However, this would last for only your current session. If you want to set it permanently, you can add the export command to your shell's startup file, like `.bashrc` or `.bash_profile`
+        * For Windows:
+        ```
+        set SENDGRID_API_KEY="#Your Key"
+        ```
+        * For Linux:
+        ```
+        export SENDGRID_API_KEY="#Your Key"
+        ```
+        However, this would last for only your current session. If you want to set it permanently, you can add the export command to your shell's startup file, like `.bashrc` or `.bash_profile`
 
   * Store the used email _the sender email_ into an environment variable as well using the same method. However, it should be named as __SOURCE_EMAIL__
   * Store a variable of a string for your Master Admin Control Unit access. This is recommended to be as hard as possible for users even for the Master admin to memorize since it can control the major high-authority operations on the page. This password would be following the name __ADMIN_PASSWORD__

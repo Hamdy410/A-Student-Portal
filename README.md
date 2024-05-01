@@ -6,13 +6,13 @@
 ## Overview
 This project has been dedicated as the final project for the famous Computer Science course: __*CS50x: Introduction to Computer Science*__.
 
-This student portal is a web-based project that aims to facilitate the communication between students, faculty staff members and the system admins. By integrating HTML, CSS and Javascript as a front-end and python with its Flask frameword for the back-end.
+This student portal is a web-based project that aims to facilitate the communication between students, faculty staff members and the system admins. By integrating HTML, CSS and Javascript as a front-end and python with its Flask framework for the back-end.
 
 ## Features
 1. __Admin Pages__:
-   * Registeration of new students
+   * Registration of new students
    * Regulating the *Media Section* and allows adding or deleting posts
-   * Send alerts to all users. However, recieve alerts only from other members
+   * Send alerts to all users. However, receive alerts only from other members
 
 2. __Master Admin Control Unit Pages__:
    * Registration of new admins as well as new faculty staff members
@@ -23,7 +23,7 @@ This student portal is a web-based project that aims to facilitate the communica
 3. __Faculty Staff__:
    * View the details of their assigned courses
    * Access to the Media section where they can post or reply to each other posts
-   * Send alerts to each other and to students, but not to admins. However, they can recieve alerts from admins.
+   * Send alerts to each other and to students, but not to admins. However, they can receive alerts from admins.
 
 4. __Students__:
    * The ability to enroll to courses compatible with their own year and semester or study.
@@ -38,7 +38,7 @@ This student portal is a web-based project that aims to facilitate the communica
    * Users can run the Python scripts found (_encrypt.py_) to insert the first master Admin into the website.
    * Users can initiate the Flask server– and only for developing purposes– using the (_app.py_) file. Note that the third python script (_helper.py_) is a custom library that is built to aid the operations of (_app.py_)
 
-     Note: There will be more explaination regarding the last three points in the following section. Specifically, the Code Documentation section later on.
+     Note: There will be more explanation regarding the last three points in the following section. Specifically, the Code Documentation section later on.
 
   ### Python libraries needed:
     - The CS50 third-party library (SQL regulations)
@@ -56,12 +56,12 @@ This student portal is a web-based project that aims to facilitate the communica
     pip install Werkzeug
     ```
 
-    Make sure you have `pip` installed on your system before running these commands. If you are using a virtual environment (which is recommended for Python projects), activate it before installing the packages. Additionaly, you may need to use `pip3` instead of `pip` if you're working with Python 3.x.
+    Make sure you have `pip` installed on your system before running these commands. If you are using a virtual environment (which is recommended for Python projects), activate it before installing the packages. Additionally, you may need to use `pip3` instead of `pip` if you're working with Python 3.x.
 
     If you encounter any issues with permissions, you might need to add `--user` to install the packages locally for your user, or use `sudo` for a system-wide installation, though the latter is generally not recommended for security reasons. Always ensure you're installing the correct version of the library that's compatible with your project's Python version.
 
 2. __Integrated Development Environment (IDE)__:
-   In my development, I prefered using Visual Studio Code (VS Code), however, any text editor program that you would be comfortable with would be suitable for editing the Python Scripts (Which we will discuss in the following section)
+   In my development, I preferred using Visual Studio Code (VS Code), however, any text editor program that you would be comfortable with would be suitable for editing the Python Scripts (Which we will discuss in the following section)
 
 # Usage
 You would be required to follow the following steps to ensure that the webapp would function properly.
@@ -83,7 +83,7 @@ You would be required to follow the following steps to ensure that the webapp wo
     ```
     export SENDGRID_API_KEY="#Your Key"
     ```
-    However, this would last for only your current session. If you want to set it permenently, you can add the export command to your shell's startup file, like `.bashrc` or `.bash_profile`
+    However, this would last for only your current session. If you want to set it permanently, you can add the export command to your shell's startup file, like `.bashrc` or `.bash_profile`
 
   * Store the used email _the sender email_ into an environment variable as well using the same method. However, it should be named as __SOURCE_EMAIL__
   * Store a variable of a string for your Master Admin Control Unit access. This is recommended to be as hard as possible for users even for the Master admin to memorize since it can control the major high-authority operations on the page. This password would be following the name __ADMIN_PASSWORD__
@@ -118,7 +118,7 @@ Since you have assigned the first user (the Master Admin, or in general the firs
 
 This will redirect you to another webpage with a form. Fill the form with required information and ensure that your email is working.
 
-You would be redirected to a webpage that requests your received OTP, consisting of 6 characters of alphanumerals, you should insert each character in a separate unit of its own.
+You would be redirected to a webpage that requests your received OTP, consisting of 6 characters of alphanumerics, you should insert each character in a separate unit of its own.
 
 Note that:
   * The required National ID must be the same as the one written in the encrypt.py file.
@@ -130,7 +130,7 @@ Through changing your domain route to __admin/password__ route where you would b
 
 There you can– as explained in the features section earlier –register new users like faculty staff and other user members. You would simply use the navigation bar on your far left named as _New Users_, there you would find a form.
 
-### Insert Admins and Faculty staff memebers
+### Insert Admins and Faculty staff members
 An arrow would be found pointing at a switch of form to allow switching between the __*Faculty Staff*__ users and __*Admins*__ users. You would be required to insert each user simultaneously following specific measures, like: "two same National IDs could not be inserted at the same time", "birthdays must be logical".
 
 ### Assign courses to Faculty Staff
@@ -140,21 +140,21 @@ In another page, which could be accessed through the nav bar on the left, you ca
   * You might need to sometimes suspend users from entering the web application. Whether for security reasons or because they have left the system. Sensitive information is encrypted in your database anyways, so it might not be of a problem to have the data of previous users. If necessary, for storage and data options, you might prefer to free some of your older members. However, the web application doesn't currently support deleting users.
   * Sending alerts to all users at once. In this section, you can send all users alerting messages at the same time regarding a specific regulation or maybe you would like to greet them on new years😅. If you wanted to send an alert for all users regarding a major development or so, it will be a useful feature to quickly communicate with your environment users.
 
-__*From here, you can now send the user Ids to your users by your prefered means. Following the same standard log in instructions is the correct way to admins, faculty staff, and students page*__
+__*From here, you can now send the user Ids to your users by your preferred means. Following the same standard log in instructions is the correct way to admins, faculty staff, and students page*__
 
 ### Registering new Students as an Admin
 Each new year or semester you can start inserting the required information for new students as users on the web application. This would be only through the _Admins pages_ (the Master Admin themselves have their own natural admins pages). Through navigating to the __New Students__ section, you would be redirected to a form with the required info about the student.
 
 # Documentation for developers
 ## At the beginning of the *app.py* file
-You would find some configurations that you might be interested in changing in case you would like to adjust the project to your own requirments.
+You would find some configurations that you might be interested in changing in case you would like to adjust the project to your own requirements.
 
 1. __From line 21 – 24__:
    It is configured that a single session for a user would be stored in the _filesystem_ type, with a constant duration of 15 minutes from the time the user would log in to the system
 
 2. __From line 27 – 32__:
    It is used to initiate the sendgrid API configuration for automated email to be sent to users, as for their first registration OTP.
-   It is written according the SendGrid API offcial documentation found at: [Uploading SendGrid Documentation - Twilio.url…](URL=https://docs.sendgrid.com/)
+   It is written according the SendGrid API official documentation found at: [Uploading SendGrid Documentation - Twilio.url…](URL=https://docs.sendgrid.com/)
 
 3. __line 35__:
    Adjust the url toward the database, as for what's found using the CS50 library documentation.
@@ -182,11 +182,11 @@ You would find some configurations that you might be interested in changing in c
 11. __From line 1136 – 1542__:
     Has the entire additional routes which are not special for a specific user. They are being regulated among all users equally.
 
-__*In each of these groups, you would find comments that throroughly explains the lines and their purposes*__
+__*In each of these groups, you would find comments that thoroughly explains the lines and their purposes*__
 
 # Personal practices
 1. HTTP request methods have been used like __PATCH, POST, and GET__.
-2. The seperated routes could have been used seperately for their identitfied routes, however, I prefered to have them seperated to make the additional features be all at the end of the file. It might be clearer and more readable for further development and improvement. This was the matter of personal cause and could be manipulated if preferred.
+2. The separated routes could have been used separately for their identified routes, however, I preferred to have them separated to make the additional features be all at the end of the file. It might be clearer and more readable for further development and improvement. This was the matter of personal cause and could be manipulated if preferred.
 3. JSON was used in the HTML pages with addition to Mutation Observers to enhance the security measures of the pages instead of only using the built-in form methods and actions. Providing two levels of security (on the client-side and on the server-side) was something I personally saw as extremely beneficial.
 4. If you looked through the syntax carefully, you would find out that some routes are distinctive to their own users' identities. Routes like _"/students/alerts"_ is already prepared (or could be adjusted) at the route _"/alerts"_. However, because of some HTML adjustments, they had their own routes.
 5. Older members were preferable to not be completely deleted from the system. Some future security regulations might be important for specific organizations and that would be according to their own preferences.
@@ -195,9 +195,9 @@ __*In each of these groups, you would find comments that throroughly explains th
 # For further development
 1. The __Websocket__ protocol is beneficial in accurately and regulatory push new data from the server to the client-side. This could enhance the experience of alerts, replies and posts in the system.
 2. __Repetitions__ in the _app.py_ file should be enhanced to make the web app code more concise. The checking of users according their identities or the insertion of alerts between two routes (as explained earlier) must allow higher readability for the future
-3. __Jvascript__: Some HTML pages share the same JS code. Searching on the internet, performance might be enhanced if we could add the JS code in separate files that could be cached for later use. Also, allowing different pages to share the same file will also enhance performance.
+3. __Javascript__: Some HTML pages share the same JS code. Searching on the internet, performance might be enhanced if we could add the JS code in separate files that could be cached for later use. Also, allowing different pages to share the same file will also enhance performance.
 4. __Jinja2__: After working for some time on the project, I found out that we could extend HTML files (using DJANGO and Jinja2) multiple times. Therefore, having the main layout of the page, different nav bars for each identity, and decreasing the number of conditions of one pages might also improve performance.
-5. __Database__: I have tried to develop a concise database. The current one handles most cases, however, I find it harder to find the right compatible combination of compactibility and performance in dealing with the fairly limited environment of using sqlite3.
+5. __Database__: I have tried to develop a concise database. The current one handles most cases, however, I find it harder to find the right compatible combination of compatibility and performance in dealing with the fairly limited environment of using sqlite3.
 6. __HTML styling__: There is a small issue when the components of the website is smaller than the actual width of the web browser causing an empty space with only the color of the background.
 
 # Acknowledgements

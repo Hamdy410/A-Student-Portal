@@ -48,13 +48,14 @@ This student portal is a web-based project that aims to facilitate the communica
     - Werkzeug library (security measures and password checking)
 
     Each of the libraries can be installed using the following commands:
-    ```
+
+    `
     pip install cs50
     pip install Flask
     pip install Flask-Session
     pip install sendgrid
     pip install Werkzeug
-    ```
+    `
 
     Make sure you have `pip` installed on your system before running these commands. If you are using a virtual environment (which is recommended for Python projects), activate it before installing the packages. Additionally, you may need to use `pip3` instead of `pip` if you're working with Python 3.x.
 

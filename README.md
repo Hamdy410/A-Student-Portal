@@ -207,7 +207,7 @@ __*In each of these groups, you would find comments that thoroughly explains the
 
 At the end, I would like to send my special thanks to the CS50 staff members who have guided us through this journey. At the beginning of this online course, I had no former idea what programming might be, but their quality, and friendly environment was the point from where my programming journey started.
 
-Special thanks to __*Professor David J.Malan*__ for his endeavor to teach aspiring computer scientists and inspriring them.
+Special thanks to __*Professor David J.Malan*__ for his endeavor to teach aspiring computer scientists and inspiring them.
 
 I would also like to send thanks to my friend who aided in the color palettes of this website. Your acknowledgements are saved no worries😁. I am still confused between the shades of white. They all look white 🎨😄.
   

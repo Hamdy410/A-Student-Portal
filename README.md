@@ -5,8 +5,6 @@
 # Author: Hamdy Ousama Hamdy (Hamdy410)
 
 # Project Description
-A student portal that aims to facilitate the interaction between students and their university's staff.
-
 ## Overview
 This project has been dedicated as the final project for the famous Computer Science course: __*CS50x: Introduction to Computer Science*__.
 

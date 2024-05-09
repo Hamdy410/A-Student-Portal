@@ -1,4 +1,6 @@
-# A-Student-Portal
+# My.University (A Student Portal)
+#### Video Demo: https://youtu.be/OMqKw_6gW1c
+#### Description: A student portal that aims to facilitate the interaction between students and their university's staff.
 
 # Author: Hamdy Ousama Hamdy (Hamdy410)
 

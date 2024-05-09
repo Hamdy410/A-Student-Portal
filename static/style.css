@@ -1,0 +1,392 @@
+body {
+    background-color: #a7d7da !important;
+    font-family: 'Garamond', Times, serif !important;
+    font-size: 24px;
+    font-weight: 500;
+    height: 100vh !important;
+}
+
+hr {
+    border: none;
+    background-color: #000;
+    height: 1px;
+    width: auto;
+}
+
+textarea {
+    text-align: left;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav {
+    background-color: whitesmoke;
+    font-size: xx-large;
+}
+
+nav img {
+    width: 100px;
+    height: auto;
+}
+
+.navtext {
+    font-weight: 600;
+}
+
+.container-fluid img {
+    cursor: pointer;
+}
+
+form,
+.posts,
+.alerts,
+.courses,
+.new_users,
+.suspensions,
+.course_details,
+.course_enrollments {
+    width: 85%;
+    height: auto;
+    border-style: solid;
+    border-radius: 20px;
+    border: 3px solid;
+    border-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: auto !important;
+    background-color: whitesmoke;
+}
+
+form>* {
+    margin: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.floatinglabel {
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+.form-radios {
+    display: flex;
+    font-size: 18px;
+}
+
+.form-radios>* {
+    padding: 0 20px;
+}
+
+input[type="radio"] {
+    border: 0.1px solid rgb(167, 160, 160);
+    transform: scale(0.8);
+}
+
+.myLabel {
+    max-width: 400px;
+}
+
+.input-notes {
+    text-align: left;
+    font-size: 12px;
+    color: #FF0000;
+    font-weight: 1000;
+    visibility: visible;
+    opacity: 1;
+    transition: 2s;
+}
+
+.otp-field input {
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 1);
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: rgb(195, 223, 226);
+}
+
+.main-and-aside {
+    display: flex;
+    height: auto;
+}
+
+aside {
+    background-color: #f2f2f2;
+    min-width: 200px;
+    color: white;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-right: 3px solid rgba(0, 0, 0, 0.2);
+    color: #000;
+}
+
+aside ul {
+    text-align: center;
+    padding: 0;
+    margin-top: 10px;
+}
+
+aside ul li {
+    padding: 10px;
+    font-weight: 600;
+    border-bottom: 1px solid #000;
+    border-top: 1px solid #000;
+    font-size: 20px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+aside ul li:hover {
+    cursor: pointer;
+    color: #f2f2f2;
+    background-color: #000;
+}
+
+.instructions {
+    width: 85%;
+    height: auto;
+    border: 3px solid;
+    border-radius: 20px;
+    border-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: auto;
+    background-color: whitesmoke;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+.instructions h2,
+.posts-owners h2,
+.register_students h2,
+.alerts-section-title h2,
+.courses-section-title h2 {
+    font-size: 38px;
+    font-weight: 900;
+}
+
+.instructions h2::before,
+.posts-owners h2::before,
+.alerts-section-title h2::before {
+    content: "• ";
+}
+
+.instructions p {
+    text-indent: 20px;
+    font-size: 24px;
+}
+
+.instructions h3 {
+    font-weight: 600;
+}
+
+.register_students_btn,
+.register_faculty_btn,
+.register_admins_btn,
+#insert-course-btn {
+    width: 140px;
+    height: 60px;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.add-btn,
+.toggle-box-div {
+    margin: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.add-btn button,
+.toggle-box-div label {
+    align-self: flex-end;
+    margin-left: 5%;
+}
+
+.card {
+    margin: 25px;
+    text-align: left;
+}
+
+.card-post-header,
+.card-alert-header,
+.card-suspend-header,
+.card-courses-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card span p {
+    opacity: 0.6;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.card-header img {
+    width: 50px;
+    height: auto;
+}
+
+#Reply-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.card-footer button {
+    margin: 10px;
+}
+
+#post-reply h5 {
+    font-weight: 100;
+    font-size: 19px;
+}
+
+#post-reply p {
+    font-weight: 50;
+    font-size: 18px;
+}
+
+#post-reply img {
+    width: 30px;
+    height: auto;
+}
+
+.card-header h5 {
+    margin: 0;
+}
+
+.image-username {
+    display: flex;
+    flex: auto;
+    align-items: center;
+}
+
+.image-username img {
+    flex-grow: 0;
+    flex-grow: 0;
+}
+
+.reply-area {
+    display: flex;
+    align-items: center;
+    flex: auto;
+    padding: 0;
+    text-align: left;
+}
+
+.reply-input {
+    width: 95%;
+}
+
+.fas.fa-heart {
+    color: red;
+}
+
+.alerts-card {
+    border-radius: 10px;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.alerts-card:hover {
+    cursor: pointer;
+    box-shadow: 10px 10px 5px gray;
+}
+
+.alerts-card img {
+    border-radius: 10px 10px 5px 5px;
+}
+
+.recipient-alert-form {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+}
+
+.recipient-alert-form>* {
+    margin: 5px;
+}
+
+.selected_options {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selected_option {
+    border: 2px solid;
+    border-radius: 10px;
+    border-color: #8d81819c;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.selected_option p {
+    margin: 0 5px;
+    font-size: 18px;
+}
+
+.selected_option .btn-close {
+    transform: scale(0.5);
+}
+
+#noAlertsYet,
+#noSuspendedUsers,
+#noCoursesYet {
+    color: rgba(143, 129, 129, 0.762);
+}
+
+.card-alerts {
+    margin: 15px auto;
+}
+
+
+.toggle-box {
+    width: 50px;
+    height: 25px;
+    display: block;
+    background-color: #000;
+    border-radius: 250px;
+    cursor: pointer;
+    position: relative;
+    transition: 0.5s;
+}
+
+#checkbox {
+    display: none;
+}
+
+.circle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 0px;
+    background-color: #FFF;
+    border-radius: 250px;
+    margin: 2.5px;
+    transition: 0.5s;
+}
+
+.academic {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow {
+    width: 25%;
+    height: 25%;
+    margin-left: 70%;
+}
+
+.arrow>img {
+    width: 100%;
+    height: 100%;
+}

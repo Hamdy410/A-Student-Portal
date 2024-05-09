@@ -1,0 +1,105 @@
+{% extends "layout.html" %} {% block title %}Admins: Instructions{% endblock %}
+{% block main %}
+<div class="instructions">
+  <h2>Instructions:</h2>
+  <p>
+    Hello and Welcome. This is the admins page, where you can monitor the entire
+    portal's activity from registering new members to sending alerts to other
+    individuals. Also, you can manage the Media (Posts and Replies) through out
+    the site.
+  </p>
+  <p>
+    In the next few lines, We will introduce you to the main tasks and rules of
+    becoming an admin in our systems.
+  </p>
+  <h3>1) Registering Students:</h3>
+  <p>
+    Each semester, We receive paper copies of our new students through the
+    <strong>Admission Office</strong>, so the first task you will be assigned
+    will be inserting (registering) students' required information and update
+    their status as per order from the <strong>Admission Office</strong>.
+    However, registering the faculty staff is not part of your duty as they are
+    not regulated via faculty but by the head university.
+  </p>
+  <p>
+    As an admin, A part of your duty is to keep the students' information as
+    secure as possible. Following themes of Confidentiality, Integrity, and
+    Accountability is crucial to guarantee the safety of our students.
+  </p>
+  <h3>2) Media Management:</h3>
+  <p>
+    As for the presence of our social service with the availability of alerts,
+    posts, and replies, admins need to regulate the best friendly-formal
+    atmosphere for all users. That means that your task is to monitor reports on
+    media to ensure they follow our privacy and policies.
+  </p>
+  <p>
+    As an admin, You have the complete administration of the interaction of
+    users with the system and each other.
+  </p>
+  <h3>3) Alerts:</h3>
+  <p>
+    Your mission is to secure bot the systems and the web content. That means
+    you must periodically monitor this section and the number of active and
+    passive reports.
+  </p>
+  <p>
+    In <strong>Alerts</strong>, you have three tasks: Send Alerts (to students,
+    faculty staff, or other admins), Receive alerts, and monitor users' reports
+    (regarding issues, posts, and replies among the media).
+  </p>
+  <h3>4) Posts:</h3>
+  <p>In this section, you can see the posts and post ones.</p>
+  <p>
+    <strong
+      >[Note: Since admins are users of high authority, their posts are
+      considered a priority. If an announcement is crucial to post, We advise
+      posting via a single admin (not more than one.)]</strong
+    >
+  </p>
+  <br />
+  <h2>Rules:</h2>
+  <p>
+    <strong>1) Least Privilege Principle:</strong> Admins should only have
+    access they need to perform their duties. This reduces the risk of
+    accidental changes or security breaches.
+  </p>
+  <p>
+    <strong>2) Change Management:</strong> Any changes to the system should be
+    documented and approved before being committed. This helps track what was
+    done and why for future administrators.
+  </p>
+  <p>
+    <strong>3) Security Practices:</strong> Admins should follow secure
+    practices, like using strong, unique passwords, and not sharing their
+    credentials.
+  </p>
+  <p>
+    <strong>4) Regular Updates:</strong> Keep the system updated to be protected
+    against possible vulnerabilities. It's crucial to report any possible
+    breaches, glitches or malfunctions as soon as possible.
+  </p>
+  <p>
+    <strong>5) Training:</strong> All admins are ensured to be properly trained
+    and understand their responsibilities.
+  </p>
+  <p>
+    <strong>6) Incident Response:</strong> Have a plan for responding to
+    security incidents, and make sure all admins are familiar with it.
+  </p>
+  <p>
+    <strong>7) Backup and Recovery:</strong> Regularly backup important data and
+    have a plan for recovering our data loss.
+  </p>
+  <p>
+    <strong>8) Compliance:</strong> Ensure all actions are in compliance with
+    relevant laws and regulations.
+  </p>
+</div>
+
+<script>
+  window.onload = function () {
+    get_numof_alerts();
+  };
+</script>
+{% endblock %}

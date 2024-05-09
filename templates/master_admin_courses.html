@@ -1,0 +1,228 @@
+{% extends "master_admin.html" %} {% block style %}<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>{% endblock %} {% block title %}Courses{% endblock %} {% block main %}
+<div class="courses">
+  <div style="margin: 5%">
+    <form
+      action="/master_admin_control_unit/courses"
+      method="post"
+      class="row g-3 form"
+      id="courses-form"
+    >
+      <label class="form-label" style="font-size: 52px">Courses Form</label>
+      <div class="form-floating col-12">
+        <input
+          type="text"
+          autocomplete="off"
+          class="form-control"
+          id="floatingInput1"
+          placeholder="Course Name"
+          required
+        />
+        <label for="floatingInput1" class="floatinglabel">Course Name</label>
+      </div>
+      <div class="form-floating col-md-3">
+        <select
+          name="faculty_staff"
+          id="floatingInput2"
+          class="form-select"
+          required
+        >
+          <option disabled selected>--Faculty Staff--</option>
+          {% for faculty in faculty_staff %}
+          <option value="{{ faculty }}">
+            {{ faculty['first_name'] }}&nbsp;{{ faculty['second_name'] }}
+          </option>
+          {% endfor %}
+        </select>
+        <label for="floatingInput2" class="floatinglabel">Faculty Staff</label>
+      </div>
+      <div class="form-floating col-md-3">
+        <select name="major" id="floatingInput3" class="form-select" required>
+          <option disabled selected>--Major--</option>
+          {% for major in majors %}
+          <option value="{{ major }}">{{ major }}</option>
+          {% endfor %}
+        </select>
+        <label for="floatingInput3" class="floatinglabel">Major</label>
+      </div>
+      <div class="form-floating col-md-3">
+        <select name="year" id="floatingInput4" class="form-select" required>
+          <option disabled selected>--Year of Study--</option>
+          <option value="1">First</option>
+          <option value="2">Second</option>
+          <option value="3">Third</option>
+          <option value="4">Fourth</option>
+        </select>
+        <label for="floatingInput4" class="floatinglabel">Year of Study</label>
+      </div>
+      <div class="form-floating col-md-3">
+        <select
+          name="semester"
+          id="floatingInput5"
+          class="form-select"
+          required
+        >
+          <option disabled selected>--Semester--</option>
+          <option value="1">First</option>
+          <option value="2">Second</option>
+        </select>
+        <label for="floatingInput5" class="floatinglabel">Semester</label>
+      </div>
+      <div class="form-floating col-md-3">
+        <select
+          name="credit_hours"
+          id="floatingInput6"
+          class="form-select"
+          required
+        >
+          <option selected disabled>--Credit Hours--</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <label for="floatingInput6" class="floatinglabel">Credit Hours</label>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary" id="insert-course-btn">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-courses-header card-header">Found Courses</div>
+    <div class="card-body">
+      {% if courses %}
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Faculty Staff</th>
+            <th scope="col">Major</th>
+            <th scope="col">Credits</th>
+            <th scope="col">Semester</th>
+            <th scope="col">Year</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for course in courses %}
+          <tr>
+            <th>{{ course['name'] }}</th>
+            <th>{{ course['first_name'] }}&nbsp;{{ course['second_name'] }}</th>
+            <th>{{ course['major'] }}</th>
+            <th>{{ course['credit_hours'] }}</th>
+            <th>{{ course['semester'] }}</th>
+            <th>{{ course['year'] }}</th>
+            <th>
+              <button
+                type="button"
+                class="Remove btn btn-danger"
+                data-course-id="{{ course['id'] }}"
+                data-course-name="{{ course['name'] }}"
+                data-faculty-user-id="{{ course['faculty_staff_user_id'] }}"
+                data-course-major="{{ course['major'] }}"
+                data-semester="{{ course['semester'] }}"
+                data-year="{{ course['year'] }}"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p id="noCoursesYet">No Courses Yet</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("courses-form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    let variables = {
+      name: document.getElementById("floatingInput1").value,
+      faculty_staff: document.getElementById("floatingInput2").value,
+      major: document.getElementById("floatingInput3").value,
+      year: document.getElementById("floatingInput4").value,
+      semester: document.getElementById("floatingInput5").value,
+      credit_hours: document.getElementById("floatingInput6").value,
+    };
+
+    let emptyNames = [];
+    for (let name in variables) {
+      if (variables[name] === "") {
+        emptyNames.push(name);
+      }
+    }
+
+    if (emptyNames.length > 0) {
+      alert("The following values are empty: " + emptyNames.join(", "));
+    } else {
+      fetch("/master_admin_control_unit/courses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: variables["name"],
+          faculty_staff: variables["faculty_staff"],
+          major: variables["major"],
+          year: variables["year"],
+          semester: variables["semester"],
+          credit_hours: variables["credit_hours"],
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        })
+        .catch((error) => {
+          console.error("Error", error);
+        });
+    }
+  });
+
+  var targetNodes = document.querySelectorAll(".Remove");
+  targetNodes.forEach((targetNode) => {
+    targetNode.addEventListener("click", () => {
+      var checked = targetNode.querySelector("i");
+
+      fetch("/master_admin_control_unit/courses", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          course_id: targetNode.getAttribute("data-course-id"),
+          course_name: targetNode.getAttribute("data-course-name"),
+          faculty_staff_user_id: targetNode.getAttribute(
+            "data-faculty-user-id"
+          ),
+          course_major: targetNode.getAttribute("data-course-major"),
+          course_semester: targetNode.getAttribute("data-semester"),
+          course_year: targetNode.getAttribute("data-year"),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.url) {
+            window.location.href = data.url;
+          }
+        });
+
+      checked.classList.remove("fa-trash");
+      checked.classList.add("fa-times");
+      targetNode.style.backgroundColor = "green";
+      targetNode.classList.add("disabled");
+    });
+  });
+</script>
+{% endblock %}

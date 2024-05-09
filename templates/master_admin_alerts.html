@@ -1,0 +1,145 @@
+{% extends "master_admin.html" %} {% block style %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+  crossorigin="anonymous"
+></script>
+{% endblock %} {% block title %}Alerts to All{% endblock %} {% block main %}
+<div class="alerts">
+  <div class="alerts-section-title">
+    <h2>Alerts to All</h2>
+  </div>
+
+  <div
+    class="d-flex justify-content-center"
+    style="height: fit-content; width: fit-content"
+  >
+    <div
+      class="card alerts-card text-center"
+      id="sendAlerts"
+      style="height: 60%; width: 60%; margin-right: auto; margin-left: auto"
+    >
+      <img src="../static/alerts_to_all.png" alt="" />
+      <div class="card-body">
+        <h5 class="card-title">Send Alerts to all users</h5>
+        <p class="card-text">
+          From here, you can send alerts to all users at once.
+        </p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-ds-toggle="modal"
+          data-bs-target="#alert-form"
+          style="align-self: center"
+        >
+          <i class="fas fa-paper-plane"></i>Send Alerts
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="SendAlertsModal"
+    aria-labelledby="send-alert"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Send an Alert</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              autocomplete="off"
+              class="form-control"
+              id="floatingInput1"
+              placeholder="Subject"
+              name="user_post_subject"
+              required
+            />
+            <label for="floatingInput1" class="floatinglabel">Subject</label>
+          </div>
+          <textarea
+            name="alert_send_area"
+            id="send_alert_content"
+            cols="40"
+            rows="10"
+            placeholder="Write the body of your alert here."
+            oninput="adjustHeight(this)"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" id="send-new-alert">
+            <i class="fas fa-paper-plane"></i> Send Alert
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function adjustHeight(textarea) {
+    textarea.style.height = "";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
+
+  var sendAlerts_Modal = new bootstrap.Modal(
+    document.getElementById("SendAlertsModal")
+  );
+
+  const sendAlertsCard = document.getElementById("sendAlerts");
+  sendAlertsCard.addEventListener("click", () => {
+    sendAlerts_Modal.show();
+  });
+
+  const sendAlertsButton = document.getElementById("send-new-alert");
+  sendAlertsButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (
+      document.getElementById("floatingInput1").value.trim() === "" ||
+      document.getElementById("send_alert_content").value.trim() === ""
+    ) {
+      alert("Your inputs should not be empty.");
+    } else {
+      sendAlerts_Modal.hide();
+      fetch("/master_admin_control_unit/alerts_to_all", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject_title: document.getElementById("floatingInput1").value.trim(),
+          content: document.getElementById("send_alert_content").value.trim(),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        });
+    }
+  });
+</script>
+{% endblock %}

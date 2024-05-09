@@ -1,0 +1,10 @@
+{% extends "layout.html" %} {% block title %}Apology{% endblock %} {% block
+main%}
+<!-- https://memegen.link/ https://api.memegen.link/images/pigeon/Not_me/_/Is_this_Photoshop~q.png?style=https://i.imgur.com/W0NXFpQ.png-->
+<img
+  alt="{{ top }}"
+  class="border img-fluid"
+  src="https://api.memegen.link/images/buzz/{{ top | urlencode }}/{{ bottom | urlencode }}.webp"
+  title="{{ top }}"
+/>
+{% endblock %}

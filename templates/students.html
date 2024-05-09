@@ -1,0 +1,84 @@
+{% extends "layout.html" %} {% block title %}Students: Instructions{% endblock
+%} {% block main %}
+<div class="instructions">
+  <h2>Instructions:</h2>
+  <p>
+    Hello and Welcome. This is the students page, where you can communicate with
+    our <strong>Faculty Staff</strong> & <strong>Admins</strong>. From here you
+    can regulate your enrolled courses, see the Media (Posts and Replies) and
+    receive alerts from other users through the site.
+  </p>
+  <p>
+    In the next few lines, We will introduce you to the main tasks and rules of
+    becoming a student in our systems.
+  </p>
+  <h3>1) Media:</h3>
+  <p>
+    As for the presence of our social service where you can share your posts and
+    see communication and replies of other users regarding your posts.
+    Currently, the system supports written text, and of course your favorite
+    emojis are also supported.
+  </p>
+  <p>
+    There you will find an environment of support, so feel free to ask all your
+    questions here and we are here to answer you.
+  </p>
+  <p>
+    <strong
+      >[Note: Any act of misconduct might resolve in completely deleting your
+      post and/or your suspension from the system either temporarily or
+      permanently. In that case, please head to the Students' Affairs
+      Office.</strong
+    >
+  </p>
+  <h3>2) Courses:</h3>
+  <p>
+    From here you will have the opportunity to regulate your course enrollments
+    to see the course titles and faculty lecturer. You will receive courses
+    suitable for your year and semester.
+  </p>
+  <p>
+    <strong
+      >Please note that your enrollment is just a request, so you are free to
+      enrol with multiple lecturers for the same course or material. However,
+      only one would be accepted according to: the number of students per
+      course, your grades whether during the last year (either school or
+      college) and/or the grades in your last semester (in case of a course
+      series). It is check the results of your enrollments at the Students
+      Affairs Office one week before the start of your first course.</strong
+    >
+  </p>
+  <h3>3) Alerts:</h3>
+  <p>
+    From here, you can receive alerts from users of higher authority. From your
+    the <strong>Faculty Staff</strong> or <strong>Admins</strong>.
+  </p>
+  <br />
+  <h2>Rules:</h2>
+  <p>
+    <strong>1) Least Privilege Principle:</strong> Students should only have
+    access they need to perform their duties. This reduces the risk of
+    accidental changes or security breaches.
+  </p>
+  <p>
+    <strong>2) Security Practices:</strong> Students should follow secure
+    practices, like using strong, unique passwords, and not sharing their
+    credentials.
+  </p>
+  <p>
+    <strong>3) Regular Updates:</strong> Keep the system updated to be protected
+    against possible vulnerabilities. It's crucial to report any possible
+    breaches, glitches or malfunctions as soon as possible.
+  </p>
+  <p>
+    <strong>4) Compliance:</strong> Ensure all actions are in compliance with
+    relevant laws and regulations.
+  </p>
+</div>
+
+<script>
+  window.onload = function () {
+    get_numof_alerts();
+  };
+</script>
+{% endblock %}

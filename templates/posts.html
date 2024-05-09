@@ -1,0 +1,628 @@
+{% extends "layout.html" %} {% block style %}<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>{% endblock %} {% block title %}Posts{% endblock %} {% block main %}
+<div class="posts">
+  <div class="add-btn">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#post-form"
+    >
+      <i class="fas fa-plus"></i> <span></span>Add Post
+    </button>
+  </div>
+
+  <div
+    class="modal fade"
+    id="post-form"
+    tabindex="-1"
+    aria-labelledby="post-form"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">
+            First Name&nbsp;Second Name
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input
+              autocomplete="off"
+              type="text"
+              class="form-control"
+              id="floatingInput1"
+              placeholder="Subject"
+              name="user_post_subject"
+              required
+            />
+            <label for="flaotingInput1" class="floatinglabel">Subject</label>
+          </div>
+          <textarea
+            name="user_post_content"
+            id="user_post_input"
+            cols="40"
+            rows="10"
+            placeholder="What's on Your Mind?"
+            oninput="adjustHeight(this)"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" id="post-new-post">
+            <i class="fas fa-paper-plane"></i> Post
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="posts-owners">
+    <h2>Admins' Posts</h2>
+  </div>
+
+  {% for post in admins_posts %}
+  <div class="card" id="post-{{ post['id'] }}">
+    <div class="card-post-header card-header">
+      <div class="left-items">
+        <img src="../static/def_prof.jpg" alt="User default image" />
+        {{ post['first_name'] }}&nbsp;{{ post['second_name'] }}
+        <span><p>({{ post['user_type'] }})</p></span>
+        <span><p>{{ post['timestamp'] }}</p></span>
+      </div>
+      {% if session["user_id"][0] == 'A' %}
+      <div class="right-items">
+        <button
+          class="Remove btn btn-danger"
+          data-post-id="{{ post['id'] }}"
+          data-first-name="{{ post['first_name']}}"
+          data-second-name="{{ post['second_name']}}"
+          data-identity="{{ post['user_type' ]}}"
+          data-timestamp="{{ post['timestamp'] }}"
+        >
+          <i class="fas fa-trash"> Remove</i>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ post['subject'] }}</h5>
+      <p class="card-text">
+        {{ post['content'] | replace("\n", "<br />") | safe }}
+      </p>
+    </div>
+    <div class="card-footer" id="Reply-footer">
+      <button
+        class="Reply"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#post-reply-{{ post['id'] }}"
+        data-post-id="{{ post['id'] }}"
+      >
+        <i class="fas fa-paper-plane"></i> <span>Reply</span>
+      </button>
+      <button
+        class="Love"
+        type="button"
+        data-my-boolean="{{ post['found'] }}"
+        data-post-id="{{ post['id'] }}"
+        data-first-name="{{ post['first_name'] }}"
+        data-second-name="{{ post['second_name'] }}"
+        data-identity="{{ post['user_type'] }}"
+        data-timestamp="{{ post['timestamp'] }}"
+      >
+        <i class="far fa-heart"> <span style="color: black">Love</span></i>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="modal fade reply-modal"
+    id="post-reply-{{ post['id'] }}"
+    aria-labelledby="post-reply"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalCenteredScrollableTitle-reply">
+            Replies
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body" id="{{ post['id'] }}"></div>
+        <div class="modal-footer">
+          <form
+            style="border: none"
+            method="post"
+            action="/add_reply"
+            class="reply-area"
+            data-post-id="{{ post['id'] }}"
+            data-first-name="{{ post['first_name'] }}"
+            data-second-name="{{ post['second_name'] }}"
+            data-identity="{{ post['user_type'] }}"
+            data-timestamp="{{ post['timestamp'] }}"
+          >
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              style="height: auto; margin: 5px"
+            ></textarea>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="posts-owners">
+    <h2>Faculty Staff's Posts</h2>
+  </div>
+
+  {% for post in faculty_staff_posts %}
+  <div class="card" id="post-{{ post['id'] }}">
+    <div class="card-post-header card-header">
+      <div class="left-items">
+        <img src="../static/def_prof.jpg" alt="User default image" />
+        {{ post['first_name'] }}&nbsp;{{ post['second_name'] }}
+        <span><p>({{ post['user_type'] }})</p></span>
+        <span><p>{{ post['timestamp'] }}</p></span>
+      </div>
+      {% if session["user_id"][0] == 'A' %}
+      <div class="right-items">
+        <button
+          class="Remove btn btn-danger"
+          data-post-id="{{ post['id'] }}"
+          data-first-name="{{ post['first_name']}}"
+          data-second-name="{{ post['second_name']}}"
+          data-identity="{{ post['user_type' ]}}"
+          data-timestamp="{{ post['timestamp'] }}"
+        >
+          <i class="fas fa-trash"> Remove</i>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ post['subject'] }}</h5>
+      <p class="card-text">
+        {{ post['content'] | replace("\n", "<br />") | safe }}
+      </p>
+    </div>
+    <div class="card-footer" id="Reply-footer">
+      <button
+        class="Reply"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#post-reply-{{ post['id'] }}"
+        data-post-id="{{ post['id'] }}"
+      >
+        <i class="fas fa-paper-plane"></i> <span>Reply</span>
+      </button>
+      <button
+        class="Love"
+        type="button"
+        data-my-boolean="{{ post['found'] }}"
+        data-post-id="{{ post['id'] }}"
+        data-first-name="{{ post['first_name'] }}"
+        data-second-name="{{ post['second_name'] }}"
+        data-identity="{{ post['user_type'] }}"
+        data-timestamp="{{ post['timestamp'] }}"
+      >
+        <i class="far fa-heart"> <span style="color: black">Love</span></i>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="modal fade reply-modal"
+    id="post-reply-{{ post['id'] }}"
+    aria-labelledby="post-reply"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalCenteredScrollableTitle-reply">
+            Replies
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body" id="{{ post['id'] }}"></div>
+        <div class="modal-footer">
+          <form
+            style="border: none"
+            method="post"
+            action="/add_reply"
+            class="reply-area"
+            data-post-id="{{ post['id'] }}"
+            data-first-name="{{ post['first_name'] }}"
+            data-second-name="{{ post['second_name'] }}"
+            data-identity="{{ post['user_type'] }}"
+            data-timestamp="{{ post['timestamp'] }}"
+          >
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              style="height: auto; margin: 5px"
+            ></textarea>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="posts-owners">
+    <h2>Students' Posts</h2>
+  </div>
+
+  {% for post in students_posts %}
+  <div class="card" id="post-{{ post['id'] }}">
+    <div class="card-post-header card-header">
+      <div class="left-items">
+        <img src="../static/def_prof.jpg" alt="User default image" />
+        {{ post['first_name'] }}&nbsp;{{ post['second_name'] }}
+        <span><p>({{ post['user_type'] }})</p></span>
+        <span><p>{{ post['timestamp'] }}</p></span>
+      </div>
+      {% if session["user_id"][0] == 'A' %}
+      <div class="right-items">
+        <button
+          class="Remove btn btn-danger"
+          data-post-id="{{ post['id'] }}"
+          data-first-name="{{ post['first_name']}}"
+          data-second-name="{{ post['second_name']}}"
+          data-identity="{{ post['user_type' ]}}"
+          data-timestamp="{{ post['timestamp'] }}"
+        >
+          <i class="fas fa-trash"> Remove</i>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ post['subject'] }}</h5>
+      <p class="card-text">
+        {{ post['content'] | replace("\n", "<br />") | safe }}
+      </p>
+    </div>
+    <div class="card-footer" id="Reply-footer">
+      <button
+        class="Reply"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#post-reply-{{ post['id'] }}"
+        data-post-id="{{ post['id'] }}"
+      >
+        <i class="fas fa-paper-plane"></i> <span>Reply</span>
+      </button>
+      <button
+        class="Love"
+        type="button"
+        data-my-boolean="{{ post['found'] }}"
+        data-post-id="{{ post['id'] }}"
+        data-first-name="{{ post['first_name'] }}"
+        data-second-name="{{ post['second_name'] }}"
+        data-identity="{{ post['user_type'] }}"
+        data-timestamp="{{ post['timestamp'] }}"
+      >
+        <i class="far fa-heart"> <span style="color: black">Love</span></i>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="modal fade reply-modal"
+    id="post-reply-{{ post['id'] }}"
+    aria-labelledby="post-reply"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ModalCenteredScrollableTitle-reply">
+            Replies
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body" id="{{ post['id'] }}"></div>
+        <div class="modal-footer">
+          <form
+            style="border: none"
+            method="post"
+            action="/add_reply"
+            class="reply-area"
+            data-post-id="{{ post['id'] }}"
+            data-first-name="{{ post['first_name'] }}"
+            data-second-name="{{ post['second_name'] }}"
+            data-identity="{{ post['user_type'] }}"
+            data-timestamp="{{ post['timestamp'] }}"
+          >
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              style="height: auto; margin: 5px"
+            ></textarea>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+  async function get_replies() {
+    let modals = document.querySelectorAll(".modal-body");
+    let ids = [];
+    for (let modal of modals) {
+      ids.push(modal.id);
+    }
+
+    let response = await fetch("/get_replies", {
+      method: "POST",
+    });
+    let data = await response.json();
+    for (each of data) {
+      if (
+        ids.includes(`${each["post_id"]}`) &&
+        !document.getElementById(`reply-${each["id"]}`)
+      ) {
+        let img = document.createElement("img");
+        img.src = "../static/def_prof.jpg";
+
+        let h5 = document.createElement("h5");
+        h5.className = "card-title";
+        h5.innerHTML = `${each["first_name"]}&nbsp;${each["second_name"]}`;
+
+        let image_username = document.createElement("div");
+        image_username.className = "image-username";
+
+        image_username.appendChild(img);
+        image_username.appendChild(h5);
+
+        let identity_span = document.createElement("span");
+        let identity_p = document.createElement("p");
+        identity_p.innerHTML = `(${each["user_type"]})`;
+        identity_span.appendChild(identity_p);
+
+        let timestamp_span = document.createElement("span");
+        let timestamp_p = document.createElement("p");
+        timestamp_p.innerHTML = `${each["timestamp"]}`;
+        timestamp_span.appendChild(timestamp_p);
+
+        let card_header = document.createElement("div");
+        card_header.className = "card-header";
+        card_header.append(image_username);
+        card_header.append(identity_span);
+        card_header.append(timestamp_span);
+
+        let card_text_p = document.createElement("p");
+        card_text_p.className = "card-text";
+        card_text_p.innerHTML = `${each["message"]}`;
+
+        let card_body = document.createElement("div");
+        card_body.className = "card-body";
+        card_body.appendChild(card_text_p);
+        //append card_body to last div
+
+        let card = document.createElement("div");
+        card.classList.add("card", "w-85", "mb-3");
+        card.id = `reply-${each["id"]}`;
+        card.appendChild(card_header);
+        card.appendChild(card_body);
+
+        let existing_div = document.getElementById(`${each["post_id"]}`);
+        existing_div.appendChild(card);
+      }
+    }
+  }
+
+  window.onload = function () {
+    var targetNodes = document.querySelectorAll(".Love");
+    targetNodes.forEach((targetNode) => {
+      var heart = targetNode.querySelector("i");
+      if (targetNode.getAttribute("data-my-boolean") === "true") {
+        heart.classList.remove("far", "fa-heart");
+        heart.classList.add("fas", "fa-heart");
+      }
+    });
+
+    get_replies();
+    get_numof_alerts();
+  };
+
+  function adjustHeight(textarea) {
+    textarea.style.height = "";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
+
+  var myModal = new bootstrap.Modal(document.getElementById("post-form"));
+  let post_button = document.getElementById("post-new-post");
+  post_button.addEventListener("click", () => {
+    let subject_title = document.getElementById("floatingInput1").value;
+    let post_content = document.getElementById("user_post_input").value;
+
+    if (subject_title === "" || post_content === "") {
+      alert("Your inputs cannot be empty.");
+    } else {
+      myModal.hide();
+      fetch("/create_post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject_title: subject_title,
+          post_content: post_content,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        });
+    }
+  });
+
+  document.addEventListener("submit", function (event) {
+    if (event.target.matches(".reply-modal form")) {
+      event.preventDefault();
+      let textarea = event.target.querySelector("textarea");
+      let textareaInput = textarea.value;
+      if (textareaInput === "") {
+        alert("Empty replies are not accepted.");
+      } else {
+        fetch("/add_reply", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: event.target.getAttribute("data-post-id"),
+            first_name: event.target.getAttribute("data-first-name"),
+            second_name: event.target.getAttribute("data-second-name"),
+            identity: event.target.getAttribute("data-identity"),
+            timestamp: event.target.getAttribute("data-timestamp"),
+            message: textareaInput,
+          }),
+        });
+        textarea.value = "";
+        get_replies();
+      }
+    }
+  });
+
+  // The CS50 duck debugger (an AI) aided me in writing these remaining lines regarding the mutation observer.
+  var targetNodes = document.querySelectorAll(".Love");
+  targetNodes.forEach(function (targetNode) {
+    var config = { attributes: true, attributeFilter: ["data-my-boolean"] };
+    var callback = function (mutationList, observer) {
+      for (let mutation of mutationList) {
+        if (mutation.type === "attributes") {
+          var heart = targetNode.querySelector("i");
+          if (targetNode.getAttribute("data-my-boolean") === "true") {
+            heart.classList.remove("far", "fa-heart");
+            heart.classList.add("fas", "fa-heart");
+          } else {
+            heart.classList.remove("fas", "fa-heart");
+            heart.classList.add("far", "fa-heart");
+          }
+        }
+      }
+    };
+
+    var observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  });
+
+  targetNodes.forEach((targetNode) => {
+    targetNode.addEventListener("click", () => {
+      if (targetNode.getAttribute("data-my-boolean") === "true") {
+        targetNode.setAttribute("data-my-boolean", "false");
+
+        fetch("/remove_like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: targetNode.getAttribute("data-post-id"),
+            first_name: targetNode.getAttribute("data-first-name"),
+            second_name: targetNode.getAttribute("data-second-name"),
+            identity: targetNode.getAttribute("data-identity"),
+            timestamp: targetNode.getAttribute("data-timestamp"),
+          }),
+        });
+      } else {
+        targetNode.setAttribute("data-my-boolean", "true");
+
+        fetch("/add_like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: targetNode.getAttribute("data-post-id"),
+            first_name: targetNode.getAttribute("data-first-name"),
+            second_name: targetNode.getAttribute("data-second-name"),
+            identity: targetNode.getAttribute("data-identity"),
+            timestamp: targetNode.getAttribute("data-timestamp"),
+          }),
+        });
+      }
+    });
+  });
+
+  let remove_buttons = document.querySelectorAll(".Remove");
+  remove_buttons.forEach(function (remove_button) {
+    remove_button.addEventListener("click", () => {
+      fetch("/remove_post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          post_id: remove_button.getAttribute("data-post-id"),
+          first_name: remove_button.getAttribute("data-first-name"),
+          second_name: remove_button.getAttribute("data-second-name"),
+          identity: remove_button.getAttribute("data-identity"),
+          timestamp: remove_button.getAttribute("data-timestamp"),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+        });
+    });
+  });
+
+  setInterval(get_replies, 5000);
+
+  window.onbeforeunload = function () {
+    observer.disconnect();
+  };
+</script>
+{% endblock %}

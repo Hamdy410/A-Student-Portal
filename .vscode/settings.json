@@ -1,0 +1,19 @@
+{
+    "cSpell.words": [
+        "Bioinformatics",
+        "compat",
+        "floatinglabel",
+        "Haytham",
+        "jsonify",
+        "movefocus",
+        "navtext",
+        "Osama",
+        "pycountry",
+        "remainderattempts",
+        "sendgrid",
+        "Validateusername",
+        "werkzeug"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic"
+}

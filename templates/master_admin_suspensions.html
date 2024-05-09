@@ -1,0 +1,191 @@
+{% extends "master_admin.html" %} {% block style %}<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>{% endblock %} {% block title %}Suspensions{% endblock %} {% block main %}
+<div class="suspensions">
+  <div class="card">
+    <div class="card-suspend-header card-header">Users Suspensions</div>
+    <div class="card-body">
+      <div class="recipient-alert-form">
+        <label for="DataList" class="form-label"
+          >Users to be Suspended&nbsp;:
+        </label>
+        <input
+          class="form-control"
+          list="datalistOptions"
+          id="DataList"
+          placeholder="Type to search..."
+        />
+        <datalist id="datalistOptions">
+          {% for user in all_users %}
+          <option
+            value="{{ user['user_id'] }} {{ user['first_name'] }} {{ user['second_name'] }}"
+          ></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="selected_options"></div>
+    </div>
+    <div
+      class="card-footer"
+      style="display: flex; justify-content: end; align-items: start"
+    >
+      <button type="button" class="btn btn-secondary">Clear</button>
+      <button type="submit" class="btn btn-danger" id="send-suspensions">
+        <i class="fas fa-pause"></i> Suspend
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="card">
+    <div class="card-suspend-header card-header">Suspended Users</div>
+    <div class="card-body">
+      {% if suspended_users %}
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Second Name</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for suspended_user in suspended_users %}
+          <tr>
+            <th scope="row">{{ suspended_user['user_id'] }}</th>
+            <td>{{ suspended_user['first_name'] }}</td>
+            <td>{{ suspended_user['second_name'] }}</td>
+            <td>
+              <button
+                type="button"
+                class="Remove btn btn-danger"
+                data-user-id="{{ suspended_user['user_id'] }}"
+                data-first-name="{{ suspended_user['first_name'] }}"
+                data-second-name="{{ suspended_user['second_name'] }}"
+              >
+                <i class="fas fa-times"></i> Unsuspend
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p id="noSuspendedUsers">No Suspended Users</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  const datalist = document.getElementsByTagName("option");
+  let data_options = [];
+
+  for (data of datalist) {
+    data_options.push(data.value);
+  }
+
+  let selected_options = [];
+  let selected_option_buttons;
+
+  const selected_options_div =
+    document.getElementsByClassName("selected_options")[0];
+
+  const suspendDatalist = document.getElementById("DataList");
+  suspendDatalist.addEventListener("input", () => {
+    if (
+      data_options.includes(suspendDatalist.value) &&
+      !selected_options.includes(suspendDatalist.value)
+    ) {
+      selected_options.push(suspendDatalist.value);
+
+      let selected_option = document.createElement("div");
+      selected_option.className = "selected_option";
+      selected_option.id = `${suspendDatalist.value}`;
+
+      let suspendDatalist_splitted = suspendDatalist.value.split(" ");
+      let p = document.createElement("p");
+      p.innerHTML = `${suspendDatalist_splitted[1]} ${suspendDatalist_splitted[2]}`;
+
+      let button = document.createElement("button");
+      button.classList.add("btn-close", "selected_option_button");
+      button.setAttribute("aria-label", "Close");
+      button.setAttribute("data-option-value", `${suspendDatalist.value}`);
+
+      selected_option.appendChild(p);
+      selected_option.appendChild(button);
+
+      selected_options_div.appendChild(selected_option);
+      suspendDatalist.value = "";
+      selected_option_buttons = document.querySelectorAll(
+        ".selected_option_button"
+      );
+
+      selected_option_buttons.forEach(function (button) {
+        button.addEventListener("click", () => {
+          let element = document.getElementById(
+            button.getAttribute("data-option-value")
+          );
+          element.remove();
+          selected_options = selected_options.filter(
+            (e) => e !== button.getAttribute("data-option-value")
+          );
+        });
+      });
+    }
+  });
+
+  const suspendUsersButtons = document.getElementById("send-suspensions");
+  suspendUsersButtons.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (selected_options.length === 0) {
+      alert("Your input should not be empty");
+    } else {
+      fetch("/master_admin_control_unit/suspensions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to_suspend: selected_options,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        });
+    }
+  });
+
+  var targetNodes = document.querySelectorAll(".Remove");
+  targetNodes.forEach((targetNode) => {
+    targetNode.addEventListener("click", () => {
+      var checked = targetNode.querySelector("i");
+
+      fetch("/master_admin_control_unit/suspensions", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: targetNode.getAttribute("data-user-id"),
+          first_name: targetNode.getAttribute("data-first-name"),
+          second_name: targetNode.getAttribute("data-second-name"),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.url) {
+            window.location.href = data.url;
+          }
+        });
+
+      checked.classList.remove("fa-times");
+      checked.classList.add("fa-check");
+      targetNode.style.backgroundColor = "green";
+      targetNode.classList.add("disabled");
+    });
+  });
+</script>
+{% endblock %}

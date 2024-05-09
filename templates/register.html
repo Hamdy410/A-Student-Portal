@@ -1,0 +1,179 @@
+{% extends "layout.html" %} {% block title %}First Time Registration{% endblock
+%} {% block main %}
+<form
+  action="/register"
+  method="post"
+  class="form"
+  id="register-form"
+  style="width: fit-content"
+>
+  <label class="form-label myLabel"
+    >Welcome, Please Register the Required Information</label
+  >
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput1"
+      placeholder="National ID"
+      name="national_id"
+      required
+    />
+    <label for="floatingInput1" class="floatinglabel">National ID</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput2"
+      placeholder="Email"
+      name="email"
+      required
+    />
+    <label for="floatingInput2" class="floatinglabel">Email</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="password"
+      class="form-control"
+      id="floatingInput3"
+      placeholder="Password"
+      name="password"
+      required
+    />
+    <label for="floatingInput3" class="floatinglabel">Password</label>
+    {% for check in checks %}
+    <div class="form-text input-notes check{{ loop.index0 }}">
+      <i class="far fa-check-circle"></i> <span>{{ check }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="password"
+      class="form-control"
+      id="floatingInput4"
+      placeholder="Confirm Password"
+      name="confirm_password"
+      required
+    />
+    <label for="floatingInput4" class="floatinglabel">Confirm Password</label>
+    <div class="form-text input-notes passwordinput_confirmation">
+      The two passwords do not match
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+
+<script>
+  let national_id;
+  const National_Input = document.getElementById("floatingInput1");
+  National_Input.addEventListener("input", () => {
+    national_id = National_Input.value;
+  });
+
+  let email;
+  let Validate_email = false;
+  const Email_Input = document.getElementById("floatingInput2");
+  Email_Input.addEventListener("input", () => {
+    email = Email_Input.value;
+    const re =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (re.test(email)) {
+      Validate_email = true;
+    } else {
+      Validate_email = false;
+    }
+  });
+
+  let Validate_All = false;
+  let password;
+  const Password_Input = document.getElementById("floatingInput3");
+  Password_Input.addEventListener("input", () => {
+    const passwordValue = Password_Input.value;
+
+    const checks = [
+      { class: "check0", regex: /^.{5,10}$/ },
+      { class: "check1", regex: /\d/ },
+      { class: "check2", regex: /[A-Z]/ },
+      { class: "check3", regex: /[a-z]/ },
+      { class: "check4", regex: /[^\w\s]/ },
+      { class: "check5", regex: /^[^\s]*$/ },
+    ];
+
+    checks.forEach((check) => {
+      const elements = document.getElementsByClassName(check.class);
+      const testResult = check.regex.test(passwordValue);
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.display = testResult ? "none" : "block";
+      }
+    });
+
+    Validate_All = checks.every((check) => check.regex.test(passwordValue));
+    password = passwordValue;
+  });
+
+  let confirmed_password;
+  const Confirmed_Input = document.getElementById("floatingInput4");
+  Confirmed_Input.addEventListener("input", () => {
+    confirmed_password = Confirmed_Input.value;
+    const elements = document.getElementsByClassName(
+      "passwordinput_confirmation"
+    );
+    testResult = confirmed_password === password;
+    elements[0].style.display = testResult ? "none" : "block";
+  });
+
+  let form = document.getElementById("register-form");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (
+      national_id === "" ||
+      email === "" ||
+      password === "" ||
+      confirmed_password === ""
+    ) {
+      alert("Please check that you entered all the required data");
+    } else if (Validate_email != true) {
+      alert(
+        "Your email format is not correct. Please, check your inputs and try again."
+      );
+    } else if (Validate_All != true) {
+      alert("Your password must follow all the required characteristics.");
+    } else if (password !== confirmed_password) {
+      alert("Your passwords do not match.");
+    } else {
+      fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          national_id: national_id,
+          email: email,
+          password: password,
+          confirmed_password: confirmed_password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.NationalIdIsNotFound === true) {
+            alert(
+              "Your National ID is not recognized. Please, Check your input and try again."
+            );
+          } else {
+            window.location.href = data.url;
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  });
+</script>
+{% endblock %}

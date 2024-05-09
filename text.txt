@@ -1,0 +1,6 @@
+SELECT p.id, p.user_id, p.subject, p.content, p.timestamp, a.first_name, a.second_name, u.user_type, COALESCE(l.found, 'false')
+FROM post as p
+JOIN all_users AS u ON p.user_id = u.user_id
+JOIN admins AS a ON u.user_id = a.user_id   
+LEFT JOIN likes AS l ON l.user_id = u.user_id AND l.post_id = p.id AND l.user_id = 'A1'  
+ORDER BY p.timestamp DESC;

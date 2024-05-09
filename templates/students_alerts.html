@@ -1,0 +1,170 @@
+{% extends "layout.html" %} {% block title %}Alerts{% endblock %} {% block main
+%}
+<div class="alerts">
+  <div class="alerts-section-title">
+    <h2>Alerts Section</h2>
+  </div>
+
+  <div
+    class="d-flex justify-content-center"
+    style="height: 70%; width: 55%; margin: auto"
+  >
+    <div class="card alerts-card text-center" id="ShowAlerts">
+      <img src="../static/letterenvelopes.png" alt="" />
+      <div class="card-body">
+        <h5 class="card-title">Received Alerts</h5>
+        <p class="card-text">
+          From here, you can see all your received alerts from other users.
+        </p>
+        <button
+          type="button"
+          class="btn btn-primary position-relative alert-notation"
+          data-bs-toggle="modal"
+          data-bs-target="#alert-form"
+          style="align-self: center"
+        >
+          Show Alerts
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ShowAlertsModal"
+    aria-labelledby="show-alerts"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Received Alerts</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          {% if alerts %} {% for alert in alerts %}
+          <div class="card card-alerts" id="alert-{{ alert['id'] }}">
+            <div class="card-alert-header card-header">
+              <div class="left-items">
+                <img src="../static/def_prof.jpg" alt="" />
+                {{ alert['first_name'] }}&nbsp;{{ alert['second_name'] }}
+                <span><p>({{ alert['user_type'] }})</p></span>
+                <span><p>({{ alert['timestamp'] }})</p></span>
+              </div>
+              <div class="right-items">
+                <button
+                  class="Remove btn btn-danger"
+                  data-alert-id="{{ alert['id'] }}"
+                  data-first-name="{{ alert['first_name'] }}"
+                  data-second-name="{{ alert['second_name'] }}"
+                  data-timestamp="{{ alert['timestamp'] }}"
+                  data-is-read="false"
+                  data-identity="{{ alert['user_type'] }}"
+                >
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ alert['subject_title'] }}</h5>
+              <p class="card-text">
+                {{ alert['content'] | replace("\n", "<br />") | safe }}
+              </p>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <p id="noAlertsYet">No Alerts Yet</p>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = function () {
+    get_numof_alerts();
+  };
+
+  const ShowAlerts_card = document.getElementById("ShowAlerts");
+  ShowAlerts_card.addEventListener("click", () => {
+    var showAlerts_Modal = new bootstrap.Modal(
+      document.getElementById("ShowAlertsModal")
+    );
+    showAlerts_Modal.show();
+  });
+
+  var targetNodes = document.querySelectorAll(".Remove");
+  targetNodes.forEach(function (targetNode) {
+    var config = { attributes: true, attributeFilter: ["data-is-read"] };
+    var callback = function (mutationList, observer) {
+      for (let mutation of mutationList) {
+        if (mutation.type === "attributes") {
+          var checked = targetNode.querySelector("i");
+          if (targetNode.getAttribute("data-is-read") === "false") {
+            checked.classList.remove("fa-check-double");
+            checked.classList.add("fa-check");
+            targetNode.style.backgroundColor = "#DC3545";
+          } else {
+            checked.classList.remove("fa-check");
+            checked.classList.add("fa-check-double");
+            targetNode.style.backgroundColor = "green";
+            targetNode.disabled = true;
+          }
+        }
+      }
+    };
+
+    var observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  });
+
+  targetNodes.forEach((targetNode) => {
+    targetNode.addEventListener("click", () => {
+      if (targetNode.getAttribute("data-is-read") === "false") {
+        fetch("/remove_alert", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            alert_id: targetNode.getAttribute("data-alert-id"),
+            first_name: targetNode.getAttribute("data-first-name"),
+            second_name: targetNode.getAttribute("data-second-name"),
+            timestamp: targetNode.getAttribute("data-timestamp"),
+            read: targetNode.getAttribute("data-is-read"),
+            user_type: targetNode.getAttribute("data-identity"),
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.url) {
+              window.location.href = data.url;
+            }
+          });
+
+        targetNode.setAttribute("data-is-read", "true");
+        get_numof_alerts();
+      }
+    });
+  });
+
+  window.onbeforeunload = function () {
+    observer.disconnect();
+  };
+</script>
+{% endblock %}

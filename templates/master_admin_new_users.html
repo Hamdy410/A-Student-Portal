@@ -1,0 +1,305 @@
+{% extends "master_admin.html" %} {% block title %}New Users{% endblock %} {%
+block main %}
+<div class="new_users">
+  <div class="arrow">
+    <img src="/static/new_drawing.svg" alt="" />
+  </div>
+  <div class="toggle-box-div">
+    <label class="toggle-box">
+      <input type="checkbox" id="checkbox" />
+      <div class="circle"></div>
+    </label>
+  </div>
+  <form
+    action="/master_admin_control_unit/new_users"
+    method="post"
+    class="row g-3 form"
+    id="register-new-form"
+  >
+    <label class="form-label" style="font-size: 52px" id="form-label-title"
+      >Admins Registration Form</label
+    >
+    <h2>General Information</h2>
+    <div class="form-floating col-md-3">
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        id="floatingInput1"
+        placeholder="First Name"
+        name="first_name"
+        required
+      />
+      <label for="floatingInput1" class="floatinglabel">First Name</label>
+    </div>
+    <div class="form-floating col-md-3">
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        id="floatingInput2"
+        placeholder="Second Name"
+        name="second_name"
+        required
+      />
+      <label for="floatingInput2" class="floatinglabel">Second Name</label>
+    </div>
+    <div class="form-floating col-md-3">
+      <input
+        type="date"
+        autocomplete="off"
+        id="floatingInput3"
+        class="form-control"
+        name="date_of_birth"
+        required
+      />
+      <label for="floatingInput3" class="floatinglabel">Date of Birth</label>
+    </div>
+    <div class="form-floating col-md-3">
+      <select
+        name="country_of_birth"
+        id="floatingInput4"
+        class="form-select"
+        required
+      >
+        <option disabled selected>--Country of Birth--</option>
+        {% for country in countries %} {% if country != "???" %}
+        <option value="{{ country }}">{{ country }}</option>
+        {% endif %} {% endfor %}
+      </select>
+      <label for="floatingInput4" class="floatinglabel">Country of Birth</label>
+    </div>
+    <div class="form-floating col-12">
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        id="floatingInput5"
+        placeholder="Residence Address"
+        name="address"
+        required
+      />
+      <label for="floatingInput5" class="floatinglabel"
+        >Residence Address</label
+      >
+    </div>
+    <h2>Legal Information</h2>
+    <div class="form-floating col-md-3">
+      <select
+        name="nationality"
+        id="floatingInput6"
+        class="form-select"
+        required
+      >
+        <option disabled selected>--First Nationality--</option>
+        {% for nationality in nationalities %}
+        <option value="{{ nationality }}">{{ nationality }}</option>
+        {% endfor %}
+      </select>
+      <label for="floatingInput6" class="floatinglabel"
+        >First Nationality</label
+      >
+    </div>
+    <div class="form-floating col-md-3">
+      <select name="gender" id="floatingInput7" class="form-select" required>
+        <option disabled selected>--Gender--</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+      </select>
+      <label for="floatingInput7" class="floatinglabel">Gender</label>
+    </div>
+    <div class="form-floating col-md-3">
+      <select name="religion" id="floatingInput8" class="form-select" required>
+        <option disabled selected>--Religion--</option>
+        <option value="Islam">Islam</option>
+        <option value="Christianity">Christianity</option>
+      </select>
+      <label for="floatingInput8" class="floatinglabel">Religion</label>
+    </div>
+    <div class="form-floating col-md-3">
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control"
+        id="floatingInput9"
+        placeholder="National ID"
+        name="national_id"
+        required
+      />
+      <label for="floatingInput9" class="floatinglabel">National ID</label>
+    </div>
+    <div class="academic row g-3">
+      <h2>Academic Information</h2>
+      <div class="form-floating col-md-3">
+        <select
+          name="faculty_role"
+          id="floatingInput10"
+          class="form-select"
+          required
+        >
+          <option disabled selected>--Faculty Role--</option>
+          {% for role in roles %}
+          <option value="{{ role }}">{{ role }}</option>
+          {% endfor %}
+        </select>
+        <label for="floatingInput10" class="floatinglabel">Faculty Role</label>
+      </div>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary register_admins_btn">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  let toggle_box = document.querySelector(".toggle-box");
+  let checkbox = document.getElementById("checkbox");
+  let circle = document.querySelector(".circle");
+  let form_title = document.getElementById("form-label-title");
+  let academic_section = document.querySelector(".academic");
+
+  toggle_box.onclick = function () {
+    if (checkbox.checked) {
+      academic_section.style.display = "flex";
+      form_title.innerHTML = "Faculty Staff Registration Form";
+      circle.style.transform = "translateX(25px)";
+      console.log("Checked");
+    } else {
+      academic_section.style.display = "none";
+      form_title.innerHTML = "Admins Registration Form";
+      circle.style.transform = "translateX(0px)";
+      console.log("Unchecked");
+    }
+  };
+
+  let date_of_birth;
+  let invalid_date_of_birth = true;
+  const date_of_birthInput = document.getElementById("floatingInput3");
+  date_of_birthInput.addEventListener("input", () => {
+    date_of_birth = date_of_birthInput.value;
+    let dateOfBirthObj = new Date(date_of_birth);
+    invalid_date_of_birth =
+      isNaN(dateOfBirthObj.getTime()) || new Date() < dateOfBirthObj;
+  });
+
+  let national_id;
+  let foundNationalID = true;
+  const national_idInput = document.getElementById("floatingInput9");
+  national_idInput.addEventListener("input", () => {
+    fetch("/check_nationalID", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        national_id: national_idInput.value,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        foundNationalID = data.is_taken;
+      });
+    national_id = national_idInput.value;
+  });
+
+  let form = document.getElementById("register-new-form");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    let variables = {
+      first_name: document.getElementById("floatingInput1").value,
+      second_name: document.getElementById("floatingInput2").value,
+      date_of_birth: date_of_birth,
+      country_of_birth: document.getElementById("floatingInput4").value,
+      address: document.getElementById("floatingInput5").value,
+      nationality: document.getElementById("floatingInput6").value,
+      gender: document.getElementById("floatingInput7").value,
+      religion: document.getElementById("floatingInput8").value,
+      national_id: national_id,
+    };
+
+    let emptyNames = [];
+    for (let name in variables) {
+      if (variables[name] === "") {
+        emptyNames.push(name);
+      }
+    }
+
+    if (emptyNames.length > 0) {
+      alert("The following values are empty: " + emptyNames.join(", "));
+    } else if (invalid_date_of_birth === true) {
+      alert(
+        "The inserted Date of Birth is illogical. Please, Check your inputs and try again."
+      );
+    } else if (foundNationalID === true) {
+      alert(
+        "This National ID has been inserted before. Please, Check your inputs and try again"
+      );
+    } else {
+      if (checkbox.checked) {
+        let role = document.getElementById("floatingInput10").value;
+        if (role === "") {
+          alert(
+            "The role input is empty. Please, check your inputs and try again."
+          );
+        } else {
+          fetch("/master_admin_control_unit/new_users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_type: "faculty_staff",
+              first_name: variables["first_name"],
+              second_name: variables["second_name"],
+              date_of_birth: variables["date_of_birth"],
+              country_of_birth: variables["country_of_birth"],
+              address: variables["address"],
+              nationality: variables["nationality"],
+              gender: variables["gender"],
+              religion: variables["religion"],
+              national_id: variables["national_id"],
+              role: role,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              window.location.href = data.url;
+            })
+            .catch((error) => {
+              console.log("Error: ", error);
+            });
+        }
+      } else {
+        fetch("/master_admin_control_unit/new_users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_type: "admins",
+            first_name: variables["first_name"],
+            second_name: variables["second_name"],
+            date_of_birth: variables["date_of_birth"],
+            country_of_birth: variables["country_of_birth"],
+            address: variables["address"],
+            nationality: variables["nationality"],
+            gender: variables["gender"],
+            religion: variables["religion"],
+            national_id: variables["national_id"],
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            window.location.href = data.url;
+          })
+          .catch((error) => {
+            console.log("Error: ", error);
+          });
+      }
+    }
+  });
+</script>
+{% endblock %}

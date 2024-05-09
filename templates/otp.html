@@ -1,0 +1,77 @@
+{% extends "layout.html" %} {% block title %}OTP Check{% endblock %} {% block
+main %}
+<form action="/send_otp" method="post" class="form" id="otp-form">
+  <label class="form-label myLabel"
+    >Please, insert your OTP code that was sent to your e-mail</label
+  >
+  <div class="otp-field">
+    {% for i in range(1, 7) %}
+    <input
+      autocomplete="off"
+      type="text"
+      maxlength="1"
+      oninput="movefocus({{ i }})"
+      id="input{{ i }}"
+    />
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+<script>
+  let otp = new Array(6);
+
+  function movefocus(n) {
+    let input = document.getElementById("input" + n);
+    if (input.value.length === 1) {
+      otp[n - 1] = input.value;
+      if (input.nextElementSibling) {
+        input.nextElementSibling.focus();
+      }
+    } else if (input.value.length === 0) {
+      delete otp[n - 1];
+      if (input.previousElementSibling) {
+        input.previousElementSibling.focus();
+      }
+    }
+  }
+
+  let form = document.getElementById("otp-form");
+  form.addEventListener("submit", function (event) {
+    let send = true;
+    event.preventDefault();
+    for (let i = 0; i < 6; i++) {
+      if (otp[i] === undefined || otp[i] === " ") {
+        alert(
+          "Your OTP should contain six characters. Please, check your input and try again."
+        );
+        send = false;
+        break;
+      }
+    }
+
+    fetch("/send_otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        otp: otp,
+        send: send,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.OTPIsWrong === true) {
+          alert(
+            "Your OTP is incorrect. Please, Check your inputs and try again. You can also receive another OTP if wanted."
+          );
+        } else {
+          window.location.href = data.url;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+</script>
+{% endblock %}

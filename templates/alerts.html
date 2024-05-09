@@ -1,0 +1,373 @@
+{% extends "layout.html" %} {% block title %}Alerts{% endblock %} {% block main
+%}
+<div class="alerts">
+  <div class="alerts-section-title">
+    <h2>Alerts Section</h2>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+      <div class="card alerts-card text-center" id="ShowAlerts">
+        <img src="../static/letterenvelopes.png" alt="" />
+        <div class="card-body">
+          <h5 class="card-title">Received Alerts</h5>
+          <p class="card-text">
+            From here, you can see all your received alerts or reports from
+            other users.
+          </p>
+          <button
+            type="button"
+            class="btn btn-primary position-relative alert-notation"
+            data-bs-toggle="modal"
+            data-bs-target="#alert-form"
+            style="align-self: center"
+          >
+            Show Alerts
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {% if all_users is not none %}
+    <div class="col">
+      <div class="card alerts-card text-center" id="SendAlerts">
+        <img src="../static/paperplanes.png" alt="" />
+        <div class="card-body">
+          <h5 class="card-title">Send Alerts</h5>
+          <p class="card-text">
+            From here, you can send alerts to other users.
+          </p>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#alert-form"
+            style="align-self: center"
+          >
+            <i class="fas fa-paper-plane"></i>
+            Send Alerts
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div
+    class="modal fade"
+    id="ShowAlertsModal"
+    aria-labelledby="show-alerts"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Received Alerts</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div class="modal-body">
+          {% if alerts %} {% for alert in alerts %}
+          <div class="card card-alerts" id="alert-{{ alert['id'] }}">
+            <div class="card-alert-header card-header">
+              <div class="left-items">
+                <img src="../static/def_prof.jpg" alt="User default image" />
+                {{ alert['first_name'] }}&nbsp;{{ alert['second_name'] }}
+                <span><p>({{ alert['user_type'] }})</p></span>
+                <span><p>{{ alert['timestamp'] }}</p></span>
+              </div>
+              <div class="right-items">
+                <button
+                  class="Remove btn btn-danger"
+                  data-alert-id="{{ alert['id'] }}"
+                  data-first-name="{{ alert['first_name'] }}"
+                  data-second-name="{{ alert['second_name'] }}"
+                  data-timestamp="{{ alert['timestamp'] }}"
+                  data-is-read="false"
+                  data-identity="{{ alert['user_type'] }}"
+                >
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ alert['subject_title'] }}</h5>
+              <p class="card-text">
+                {{ alert['content'] | replace("\n", "<br />") | safe }}
+              </p>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <p id="noAlertsYet">No alerts yet</p>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if all_users is not none %}
+  <div
+    class="modal fade"
+    id="SendAlertsModal"
+    aria-labelledby="send-alert"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Send An alert</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body" id="SendAlert">
+          <div class="recipient-alert-form">
+            <label for="DataList" class="form-label">Recipient&nbsp;: </label>
+            <input
+              class="form-control"
+              list="datalistOptions"
+              id="DataList"
+              placeholder="Type to search..."
+            />
+            <datalist id="datalistOptions">
+              {% for user in all_users %}
+              <option
+                value="{{ user['user_id'] }} {{ user['first_name'] }} {{ user['second_name'] }}"
+              >
+                {% endfor %}
+              </option>
+            </datalist>
+          </div>
+          <div class="selected_options"></div>
+          <hr />
+          <div class="form-floating mb-3">
+            <input
+              autocomplete="off"
+              type="text"
+              class="form-control"
+              id="floatingInput3"
+              placeholder="Subject"
+              name="user_post_subject"
+              required
+            />
+            <label for="flaotingInput3" class="floatinglabel">Subject</label>
+          </div>
+          <textarea
+            name="alert_send_area"
+            id="send_alert_content"
+            cols="40"
+            rows="10"
+            placeholder="Write the body of your alert here."
+            oninput="adjustHeight(this)"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" id="send-new-alert">
+            <i class="fas fa-paper-plane"></i> Send Alert
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  window.onload = function () {
+    get_numof_alerts();
+  };
+
+  function adjustHeight(textarea) {
+    textarea.style.height = "";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
+
+  var sendAlerts_Modal = new bootstrap.Modal(
+    document.getElementById("SendAlertsModal")
+  );
+
+  const sendAlerts_card = document.getElementById("SendAlerts");
+  sendAlerts_card.addEventListener("click", () => {
+    sendAlerts_Modal.show();
+  });
+
+  const datalist = document.getElementsByTagName("option");
+  let data_options = [];
+
+  for (data of datalist) {
+    data_options.push(data.value);
+  }
+
+  let selected_options = [];
+  let selected_option_buttons;
+
+  const selected_options_div =
+    document.getElementsByClassName("selected_options")[0];
+
+  const sendAlerts_datalist = document.getElementById("DataList");
+  sendAlerts_datalist.addEventListener("input", () => {
+    if (
+      data_options.includes(sendAlerts_datalist.value) &&
+      !selected_options.includes(sendAlerts_datalist.value)
+    ) {
+      selected_options.push(sendAlerts_datalist.value);
+
+      let selected_option = document.createElement("div");
+      selected_option.className = "selected_option";
+      selected_option.id = `${sendAlerts_datalist.value}`;
+
+      let sendAlerts_datalist_splitted = sendAlerts_datalist.value.split(" ");
+      let p = document.createElement("p");
+      p.innerHTML = `${sendAlerts_datalist_splitted[1]} ${sendAlerts_datalist_splitted[2]}`;
+
+      let button = document.createElement("button");
+      button.classList.add("btn-close", "selected_option_button");
+      button.setAttribute("aria-label", "Close");
+      button.setAttribute("data-option-value", `${sendAlerts_datalist.value}`);
+
+      selected_option.appendChild(p);
+      selected_option.appendChild(button);
+
+      selected_options_div.appendChild(selected_option);
+
+      sendAlerts_datalist.value = "";
+
+      selected_option_buttons = document.querySelectorAll(
+        ".selected_option_button"
+      );
+
+      selected_option_buttons.forEach(function (button) {
+        button.addEventListener("click", () => {
+          let element = document.getElementById(
+            button.getAttribute("data-option-value")
+          );
+          element.remove();
+          selected_options = selected_options.filter(
+            (e) => e !== button.getAttribute("data-option-value")
+          );
+        });
+      });
+    }
+  });
+
+  const sendAlertButton = document.getElementById("send-new-alert");
+  sendAlertButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (
+      document.getElementById("floatingInput3").value.trim() === "" ||
+      document.getElementById("send_alert_content").value.trim() === "" ||
+      selected_options.length === 0
+    ) {
+      alert("Your inputs should not be empty");
+    } else {
+      sendAlerts_Modal.hide();
+      fetch("/alerts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipients: selected_options,
+          subject_title: document.getElementById("floatingInput3").value.trim(),
+          content: document.getElementById("send_alert_content").value.trim(),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        });
+    }
+  });
+
+  const ShowAlerts_card = document.getElementById("ShowAlerts");
+  ShowAlerts_card.addEventListener("click", () => {
+    var showAlerts_Modal = new bootstrap.Modal(
+      document.getElementById("ShowAlertsModal")
+    );
+    showAlerts_Modal.show();
+  });
+
+  var targetNodes = document.querySelectorAll(".Remove");
+  targetNodes.forEach(function (targetNode) {
+    var config = { attributes: true, attributeFilter: ["data-is-read"] };
+    var callback = function (mutationList, observer) {
+      for (let mutation of mutationList) {
+        if (mutation.type === "attributes") {
+          var checked = targetNode.querySelector("i");
+          if (targetNode.getAttribute("data-is-read") === "false") {
+            checked.classList.remove("fa-check-double");
+            checked.classList.add("fa-check");
+            targetNode.style.backgroundColor = "#dc3545";
+          } else {
+            checked.classList.remove("fa-check");
+            checked.classList.add("fa-check-double");
+            targetNode.style.backgroundColor = "green";
+            targetNode.disabled = true;
+          }
+        }
+      }
+    };
+
+    var observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  });
+
+  targetNodes.forEach((targetNode) => {
+    targetNode.addEventListener("click", () => {
+      if (targetNode.getAttribute("data-is-read") === "false") {
+        fetch("/remove_alert", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            alert_id: targetNode.getAttribute("data-alert-id"),
+            first_name: targetNode.getAttribute("data-first-name"),
+            second_name: targetNode.getAttribute("data-second-name"),
+            timestamp: targetNode.getAttribute("data-timestamp"),
+            read: targetNode.getAttribute("data-is-read"),
+            user_type: targetNode.getAttribute("data-identity"),
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.url) {
+              window.location.href = data.url;
+            }
+          });
+
+        targetNode.setAttribute("data-is-read", "true");
+        get_numof_alerts();
+      }
+    });
+  });
+
+  window.onbeforeunload = function () {
+    observer.disconnect();
+  };
+</script>
+{% endblock %}

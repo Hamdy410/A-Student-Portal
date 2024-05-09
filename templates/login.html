@@ -1,0 +1,113 @@
+{% extends "layout.html" %} {% block title %}Login{% endblock %} {% block main
+%}
+<form
+  action="/login"
+  method="post"
+  class="form"
+  id="login-form"
+  style="width: fit-content"
+>
+  <label class="form-label">Hello, there</label>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput1"
+      placeholder="Username"
+      name="user_name"
+      required
+    />
+    <label for="floatingInput1" class="floatinglabel">Username</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      type="password"
+      class="form-control"
+      id="floatingInput2"
+      placeholder="Password"
+      name="password"
+    />
+    <label for="floatingInput2" class="floatinglabel">Password</label>
+  </div>
+  <div class="form-radios">
+    {% for identity in identities %}
+    <div class="form-check">
+      <input
+        autocomplete="off"
+        class="form-check-input identity"
+        type="radio"
+        name="identity"
+        id="{{ identity }}"
+        value="{{ identity }}"
+      />
+      <label for="{{ identity }}" class="form-check-label"
+        >{{ identity }}</label
+      >
+    </div>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+
+<script>
+  let user_name;
+  const username_Input = document.querySelector('input[type="text"]');
+  username_Input.addEventListener("input", () => {
+    user_name = username_Input.value;
+  });
+
+  let password = "None";
+  const password_Input = document.querySelector('input[type="password"]');
+  password_Input.addEventListener("input", () => {
+    password = password_Input.value === "" ? "None" : password_Input.value;
+  });
+
+  let identity;
+  const identity_Input = document.querySelectorAll('input[type="radio"]');
+  identity_Input.forEach((radio) => {
+    radio.addEventListener("input", () => {
+      if (radio.checked) {
+        identity = radio.value;
+      }
+    });
+  });
+
+  let form = document.getElementById("login-form");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (user_name === "") {
+      alert("A username must be provided.");
+    } else if (identity === "") {
+      alert("You must configure your identity.");
+    } else {
+      fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_name: user_name,
+          password: password,
+          identity: identity,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.PasswordIsWrong === true) {
+            alert(
+              "Invalid Username/Password. Please, Check your inputs and try again."
+            );
+          } else {
+            window.location.href = data.url;
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  });
+</script>
+{% endblock %}

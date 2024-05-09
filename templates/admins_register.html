@@ -1,0 +1,262 @@
+{% extends "layout.html" %} {% block title %}Register Students{% endblock %} {%
+block main%}
+<form
+  action="/admins/register"
+  method="post"
+  class="row g-3 form"
+  id="register_students-form"
+>
+  <label class="form-label" style="font-size: 52px"
+    >Register a New Student</label
+  >
+  <h2>General Information</h2>
+  <div class="form-floating col-md-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput1"
+      placeholder="First Name"
+      name="first_name"
+      required
+    />
+    <label for="floatingInput1" class="floatinglabel">First Name</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput2"
+      placeholder="Second Name"
+      name="second_name"
+      required
+    />
+    <label for="floatingInput1" class="floatinglabel">Second Name</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <input
+      autocomplete="off"
+      type="date"
+      id="floatingInput3"
+      class="form-control"
+      name="date_of_birth"
+      required
+    />
+    <label for="floatingInput3" class="floatinglabel">Date of Birth</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <select
+      name="country_of_birth"
+      class="form-select"
+      id="floatingInput4"
+      required
+    >
+      <option disabled selected>--Country of Birth--</option>
+      {% for country in countries %} {% if country != "???" %}
+      <option value="{{ country }}">{{ country }}</option>
+      {% endif %} {% endfor %}
+    </select>
+    <label for="floatingInput4" class="floatinglabel">Country of Birth</label>
+  </div>
+  <div class="form-floating col-12">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput5"
+      placeholder="Residence Address"
+      name="address"
+      required
+    />
+    <label for="floatingInput5" class="floatinglabel">Residence Address</label>
+  </div>
+  <h2>Legal Information</h2>
+  <div class="form-floating col-md-3">
+    <select name="nationality" id="floatingInput6" class="form-select" required>
+      <option disabled selected>--First Nationality--</option>
+      {% for nationality in nationalities %}
+      <option value="{{ nationality }}">{{ nationality }}</option>
+      {% endfor %}
+    </select>
+    <label for="floatingInput6" class="floatinglabel">First Nationality</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <select name="gender" id="floatingInput7" class="form-select" required>
+      <option disabled selected>--Gender--</option>
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+    </select>
+    <label for="floatingInput7" class="floatinglabel">Gender</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <select name="religion" id="floatingInput8" class="form-select" required>
+      <option disabled selected>--Religion--</option>
+      <option value="Islam">Islam</option>
+      <option value="Christianity">Christianity</option>
+    </select>
+    <label for="floatingInput8" class="floatinglabel">Religion</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      id="floatingInput9"
+      placeholder="National ID"
+      name="national_id"
+      required
+    />
+    <label for="floatingInput9" class="floatinglabel">National ID</label>
+  </div>
+  <h2>Academic Information</h2>
+  <div class="form-floating col-md-3">
+    <select
+      name="year_of_study"
+      id="floatingInput10"
+      class="form-select"
+      required
+    >
+      <option disabled selected>--Year of Study--</option>
+      <option value="1">First</option>
+      <option value="2">Second</option>
+      <option value="3">Third</option>
+      <option value="4">Fourth</option>
+    </select>
+    <label for="floatingInput10" class="floatinglabel">Year of Study</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <select name="semester" id="floatingInput11" class="form-select" required>
+      <option disabled selected>--Semester--</option>
+      <option value="1">First</option>
+      <option value="2">Second</option>
+    </select>
+    <label for="floatingInput11" class="floatinglabel">Semester</label>
+  </div>
+  <div class="form-floating col-md-3">
+    <select name="major" id="floatingInput12" class="form-select" required>
+      <option disabled selected>--Major--</option>
+      {% for major in majors %}
+      <option value="{{ major }}">{{ major }}</option>
+      {% endfor %}
+    </select>
+    <label for="floatingInput12" class="floatinglabel">Major</label>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary register_students_btn">
+      Submit
+    </button>
+  </div>
+</form>
+
+<script>
+  let date_of_birth;
+  let invalid_date_of_birth = true;
+  const date_of_birthInput = document.getElementById("floatingInput3");
+  date_of_birthInput.addEventListener("input", () => {
+    date_of_birth = date_of_birthInput.value;
+    let dateOfBirthObj = new Date(date_of_birth);
+    invalid_date_of_birth =
+      isNaN(dateOfBirthObj.getTime()) || new Date() < dateOfBirthObj;
+  });
+
+  let national_id;
+  let foundNationalID = true;
+  const national_idInput = document.getElementById("floatingInput9");
+  national_idInput.addEventListener("input", () => {
+    fetch("/check_nationalID", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        national_id: national_idInput.value,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        foundNationalID = data.is_taken;
+      });
+    national_id = national_idInput.value;
+  });
+
+  let form = document.getElementById("register_students-form");
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    //The idea for using the variables' list and iterating over it was inspired with the help of Microsoft's Copilot (An AI engine).
+
+    let variables = {
+      first_name: document.getElementById("floatingInput1").value,
+      second_name: document.getElementById("floatingInput2").value,
+      date_of_birth: date_of_birth,
+      country_of_birth: document.getElementById("floatingInput4").value,
+      address: document.getElementById("floatingInput5").value,
+      nationality: document.getElementById("floatingInput6").value,
+      gender: document.getElementById("floatingInput7").value,
+      religion: document.getElementById("floatingInput8").value,
+      national_id: national_id,
+      year_of_study: document.getElementById("floatingInput10").value,
+      semester: document.getElementById("floatingInput11").value,
+      major: document.getElementById("floatingInput12").value,
+    };
+
+    let emptyNames = [];
+
+    for (let name in variables) {
+      if (variables[name] === "") {
+        emptyNames.push(name);
+      }
+    }
+
+    if (emptyNames.length > 0) {
+      alert("The following values are empty: " + emptyNames.join(", "));
+    } else if (invalid_date_of_birth === true) {
+      alert(
+        "The inserted Date of Birth is illogical. Please, Check your inputs and try again."
+      );
+    } else if (foundNationalID === true) {
+      alert(
+        "This National ID has been inserted before. Please, Check this input and try again."
+      );
+    } else {
+      fetch("/admins/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: variables["first_name"],
+          second_name: variables["second_name"],
+          date_of_birth: variables["date_of_birth"],
+          country_of_birth: variables["country_of_birth"],
+          address: variables["address"],
+          nationality: variables["nationality"],
+          gender: variables["gender"],
+          religion: variables["religion"],
+          national_id: variables["national_id"],
+          year_of_study: variables["year_of_study"],
+          semester: variables["semester"],
+          major: variables["major"],
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            alert(data.message);
+            window.location.href = data.url;
+          } else {
+            window.location.href = data.url;
+          }
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+        });
+    }
+  });
+
+  window.onload = function () {
+    get_numof_alerts();
+  };
+</script>
+{% endblock %}

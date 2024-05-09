@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/icon.ico" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    {% block style %}{% endblock %}
+
+    <link rel="stylesheet" href="/static/reset.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <title>Master Admin Control Unit: {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <nav class="navbar-light">
+      <div class="container-fluid">
+        <a href="/" class="navbar-brand"
+          ><img src="/static/icon.ico" alt="" /><span class="navtext"
+            >My. university</span
+          ></a
+        >
+      </div>
+    </nav>
+
+    {% if get_flashed_messages() %}
+    <header>
+      <div class="alert alert-primary mb-0 text-center d-flex" role="alert">
+        <div class="text-center flex-grow-1">
+          {{ get_flashed_messages() | join(" ") }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-sm ms-auto"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    </header>
+    {% endif %}
+
+    <div class="main-and-aside">
+      {% if "user_id" in session and session["user_id"][0] == 'A' and
+      "approved_to_master" in session and "approved_to_register" not in session
+      %}
+      <aside>
+        <ul>
+          <a href="/master_admin_control_unit"><li>Instructions</li></a>
+          <a href="/master_admin_control_unit/new_users"><li>New Users</li></a>
+          <a href="/master_admin_control_unit/suspensions"
+            ><li>Suspensions</li></a
+          >
+          <a href="/master_admin_control_unit/courses"><li>Courses</li></a>
+          <a href="/master_admin_control_unit/alerts_to_all"
+            ><li>Alerts to all</li></a
+          >
+        </ul>
+      </aside>
+      {% endif %}
+
+      <main class="container py-5 text-center">
+        {% block main %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>

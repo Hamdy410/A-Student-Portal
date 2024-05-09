@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/static/icon.ico" rel="icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.3.0/font-awesome-animation.min.css"
+    />
+
+    {% block style %}{% endblock %}
+
+    <link rel="stylesheet" href="/static/reset.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <title>Ibn Al-Haytham 2.0: {% block title %}{% endblock %}</title>
+  </head>
+
+  <body>
+    {% if "user_id" in session and "approved_to_register" not in session %}
+    <script>
+      async function get_numof_alerts() {
+        var targetNodes = Array.from(
+          document.getElementsByClassName("alert-notation")
+        );
+        let response = await fetch("/numof_alerts", {
+          method: "POST",
+        });
+        let data = await response.json();
+        targetNodes.forEach((targetNode) => {
+          if (data["numof_alerts"] == 0) {
+            if (targetNode.getElementsByClassName("badge")[0]) {
+              targetNode.getElementsByClassName("badge")[0].remove();
+            }
+          } else {
+            if (targetNode.getElementsByClassName("badge")[0]) {
+              targetNode.getElementsByClassName("badge")[0].remove();
+            }
+
+            if (targetNode.tagName == "BUTTON") {
+              let span_badge = document.createElement("span");
+              span_badge.classList.add(
+                "position-absolute",
+                "top-0",
+                "start-100",
+                "translate-middle",
+                "badge",
+                "rounded-pill",
+                "bg-danger"
+              );
+
+              let my_badge = document.createElement("my-badge");
+              my_badge.classList.add("my-badge");
+              my_badge.innerHTML = `${data["numof_alerts"]}`;
+
+              let visually_hidden = document.createElement("span");
+              visually_hidden.classList.add("visually-hidden");
+              visually_hidden.innerHTML = "Unread Messages";
+
+              span_badge.appendChild(my_badge);
+              span_badge.appendChild(visually_hidden);
+
+              targetNode.appendChild(span_badge);
+            } else if (targetNode.tagName == "LI") {
+              let span_badge = document.createElement("span");
+              span_badge.classList.add("badge", "bg-danger", "rounded-pill");
+
+              let bell = document.createElement("i");
+              bell.classList.add("fas", "fa-bell", "faa-ring", "animated");
+
+              let my_badge = document.createElement("span");
+              my_badge.innerHTML = ` ${data["numof_alerts"]}`;
+
+              span_badge.appendChild(bell);
+              span_badge.appendChild(my_badge);
+
+              targetNode.appendChild(span_badge);
+            }
+          }
+        });
+      }
+    </script>
+    {% endif %}
+    <nav class="navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/" class="navtext"
+          ><img src="/static/icon.ico" alt="" /><span class="navtext"
+            >My. university</span
+          ></a
+        >
+      </div>
+    </nav>
+
+    {% if get_flashed_messages() %}
+    <header>
+      <div class="alert alert-primary mb-0 text-center d-flex" role="alert">
+        <div class="text-center flex-grow-1">
+          {{ get_flashed_messages() | join(" ") }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-sm ms-auto"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    </header>
+    {% endif %}
+
+    <div class="main-and-aside">
+      {% if "user_id" in session and session["user_id"][0] == 'A' and
+      "approved_to_register" not in session %}
+      <aside>
+        <ul>
+          <a href="/admins"><li>Instructions</li></a>
+          <a href="/admins/register"><li>Register Students</li></a>
+          <a href="/posts"><li>Media Control</li></a>
+          <a href="/alerts"><li class="alert-notation">Alerts</li></a>
+        </ul>
+      </aside>
+      {% endif %} {% if "user_id" in session and session["user_id"][0] == 'F'
+      and "approved_to_register" not in session%}
+      <aside>
+        <ul>
+          <a href="/faculty_staff"><li>Instructions</li></a>
+          <a href="/faculty_staff/courses_details"><li>Courses Details</li></a>
+          <a href="/posts"><li>Media Control</li></a>
+          <a href="/alerts"><li class="alert-notation">Alerts</li></a>
+        </ul>
+      </aside>
+      {% endif %} {% if "user_id" in session and session["user_id"][0] == 'S'
+      and "approved_to_register" not in session%}
+      <aside>
+        <ul>
+          <a href="/students"><li>Instructions</li></a>
+          <a href="/students/course_enrollments"><li>Courses Enrollment</li></a>
+          <a href="/posts"><li>Media Control</li></a>
+          <a href="/students/alerts"><li class="alert-notation">Alerts</li></a>
+        </ul>
+      </aside>
+      {% endif %}
+
+      <main class="container py-5 text-center">
+        {% block main %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>
